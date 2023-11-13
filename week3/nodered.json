@@ -1,0 +1,813 @@
+[
+    {
+        "id": "0d16ce2af94d3313",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c67ca1b6eb4d0b4b",
+        "type": "mqtt in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "topic": "prueba1",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "2133642c3ad18612",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "9c120703747ffc6e",
+                "8f5c4af055ba0e03"
+            ]
+        ]
+    },
+    {
+        "id": "9c120703747ffc6e",
+        "type": "debug",
+        "z": "0d16ce2af94d3313",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 340,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "bd26c742e73c59d2",
+        "type": "mysql",
+        "z": "0d16ce2af94d3313",
+        "mydb": "f2dc22e9c028f5d4",
+        "name": "iaiot",
+        "x": 570,
+        "y": 100,
+        "wires": [
+            [
+                "cfc6fad8af0fa4ac"
+            ]
+        ]
+    },
+    {
+        "id": "8f5c4af055ba0e03",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 1",
+        "func": "var json = msg.payload; \nmsg.topic = \"insert into datos values (null,\" + json.idnodo + \",\"  + json.temperatura + \",\" + json.humedad + \n\",now())\"; \n\nreturn msg; ",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 120,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "c3da5d9babd9af6f",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/datos",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 400,
+        "wires": [
+            [
+                "0f4e321054de260b"
+            ]
+        ]
+    },
+    {
+        "id": "0f4e321054de260b",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 2",
+        "func": "msg.topic = \"select * from datos\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 400,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "cfc6fad8af0fa4ac",
+        "type": "json",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 750,
+        "y": 100,
+        "wires": [
+            [
+                "57adc104aa96431e"
+            ]
+        ]
+    },
+    {
+        "id": "57adc104aa96431e",
+        "type": "change",
+        "z": "0d16ce2af94d3313",
+        "name": "headers",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{}",
+                "tot": "json"
+            },
+            {
+                "t": "set",
+                "p": "headers.content.type",
+                "pt": "msg",
+                "to": "application/json",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 100,
+        "wires": [
+            [
+                "6b835813095a6bcc"
+            ]
+        ]
+    },
+    {
+        "id": "6b835813095a6bcc",
+        "type": "http response",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1130,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "9209eae7e72e7a38",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/datos-id",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 460,
+        "wires": [
+            [
+                "b4a315fbde731fd7"
+            ]
+        ]
+    },
+    {
+        "id": "b4a315fbde731fd7",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 3",
+        "func": "var id = msg.payload.id;\nmsg.topic = \"select * from datos where id =\" + id;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 460,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "a20c7a2fb5f764d5",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/fecha",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 540,
+        "wires": [
+            [
+                "b63c24f5276f69fd"
+            ]
+        ]
+    },
+    {
+        "id": "b63c24f5276f69fd",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 4",
+        "func": "var fechaInicio = msg.req.query.fechaInicio;\nvar fechaFin = msg.req.query.fechaFin;\n\nif (fechaInicio && fechaFin) {\n    msg.topic = \"SELECT * FROM datos WHERE fecha BETWEEN '\" + fechaInicio + \"' AND '\" + fechaFin + \"'\";\n} else {\n    // Manejo de error o mensaje de que faltan los parámetros de fecha\n    // Puedes personalizar esta parte según tus necesidades.\n    msg.topic = \"SELECT * FROM datos\";\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 540,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "a4d2126180ae130d",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 5",
+        "func": "var user = msg.payload.user;\nvar nombre = msg.payload.nombre;\nvar pass = msg.payload.password;\nvar tipo = msg.payload.tipo;\nmsg.topic = `insert into usuarios values (\"${user}\",\"${nombre}\",\"${pass}\",${tipo})`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 620,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "4cb8f66cdc92c7f0",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 6",
+        "func": "var user = msg.payload.user;\nvar nombre = msg.payload.nombre;\nvar pass = msg.payload.password;\nvar tipo = msg.payload.tipo;\nmsg.topic = `update usuarios set nombre=\"${nombre}\", password=\"${pass}\", tipo=${tipo} where user=\"${user}\"`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 680,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "f77f212efc069d93",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 7",
+        "func": "var user = msg.payload.user;\nmsg.topic = `delete from usuarios where user=\"${user}\"`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 740,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "5cf4816931e0f131",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 8",
+        "func": "var user = msg.payload.user;\nvar pass = msg.payload.password;\n\nmsg.topic = `select * from usuarios where user=\"${user}\" and password=\"${pass}\"`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 820,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "2204b2d1906f8cb5",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/crearUsuario",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 450,
+        "y": 620,
+        "wires": [
+            [
+                "a4d2126180ae130d"
+            ]
+        ]
+    },
+    {
+        "id": "f9f3527f397efc21",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/modificarUsuario",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 460,
+        "y": 680,
+        "wires": [
+            [
+                "4cb8f66cdc92c7f0"
+            ]
+        ]
+    },
+    {
+        "id": "759b7da79d576399",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/borrarUsuario",
+        "method": "delete",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 400,
+        "y": 740,
+        "wires": [
+            [
+                "f77f212efc069d93"
+            ]
+        ]
+    },
+    {
+        "id": "78d09f80b931fb65",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/validarUsuario",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 400,
+        "y": 820,
+        "wires": [
+            [
+                "5cf4816931e0f131"
+            ]
+        ]
+    },
+    {
+        "id": "d896b66f6d971ab2",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/usuarios",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 410,
+        "y": 900,
+        "wires": [
+            [
+                "7c97e0848dd1575f"
+            ]
+        ]
+    },
+    {
+        "id": "b19f91336b3a0efa",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/user",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 400,
+        "y": 960,
+        "wires": [
+            [
+                "73e3cea7a0bda20e"
+            ]
+        ]
+    },
+    {
+        "id": "7c97e0848dd1575f",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 9",
+        "func": "msg.topic = \"select * from usuarios\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 900,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "73e3cea7a0bda20e",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 10",
+        "func": "var user = msg.payload.user;\nmsg.topic = `select * from usuarios where user=\"${user}\"`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 960,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "7edcc25fa93b2372",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 11",
+        "func": "var idnodo = msg.payload.idnodo;\nvar nombre = msg.payload.nombre;\nvar ubic = msg.payload.ubicacion;\nvar estado = msg.payload.estado;\nvar user = msg.payload.user;\nmsg.topic = `insert into nodos values (${idnodo},\"${nombre}\",\"${ubic}\",${estado},\"${user}\")`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1210,
+        "y": 340,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "a30a7a602fef52ef",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/crearNodo",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1000,
+        "y": 340,
+        "wires": [
+            [
+                "7edcc25fa93b2372"
+            ]
+        ]
+    },
+    {
+        "id": "2cbabf5cb2e1235a",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/modificarNodo",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 970,
+        "y": 400,
+        "wires": [
+            [
+                "75d326ded72c3a8c"
+            ]
+        ]
+    },
+    {
+        "id": "75d326ded72c3a8c",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 12",
+        "func": "var idnodo = msg.payload.idnodo;\nvar nombre = msg.payload.nombre;\nvar ubic = msg.payload.ubicacion;\nvar estado = msg.payload.estado;\nvar user = msg.payload.user;\n\nmsg.topic = `update  nodos set nombreNodo=\"${nombre}\",ubicacion=\"${ubic}\",estado=\"${estado}\",user=\"${user}\" where idnodo=${idnodo}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1190,
+        "y": 400,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "79c2c9b50a3bbd18",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 13",
+        "func": "var idnodo = msg.payload.idnodo;\nmsg.topic = `delete from nodos where idnodo=\"${idnodo}\"`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1210,
+        "y": 460,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "5435711ab0f7ff2d",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/borrarNodo",
+        "method": "delete",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1010,
+        "y": 460,
+        "wires": [
+            [
+                "79c2c9b50a3bbd18"
+            ]
+        ]
+    },
+    {
+        "id": "05bb6aeca6e77d5a",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/nodos",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 990,
+        "y": 520,
+        "wires": [
+            [
+                "38fbab711de83a2c"
+            ]
+        ]
+    },
+    {
+        "id": "38fbab711de83a2c",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 14",
+        "func": "msg.topic = \"select * from nodos\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1230,
+        "y": 520,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "f1b124f06a7d4d8d",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/nodo",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1000,
+        "y": 580,
+        "wires": [
+            [
+                "b76aaa408d5a5d16"
+            ]
+        ]
+    },
+    {
+        "id": "9ae50495577b4115",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/nodoUser",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1020,
+        "y": 640,
+        "wires": [
+            [
+                "cd7e38227d2ff89b"
+            ]
+        ]
+    },
+    {
+        "id": "b76aaa408d5a5d16",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 15",
+        "func": "var idnodo = msg.payload.idnodo;\nmsg.topic = \"select * from nodos where idnodo=\" + idnodo;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1190,
+        "y": 580,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "cd7e38227d2ff89b",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 16",
+        "func": "var user = msg.payload.user;\nmsg.topic = `select * from nodos where user =\"${user}\"`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1210,
+        "y": 640,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "ba4a5290708c9284",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/datos-idnodo",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1030,
+        "y": 720,
+        "wires": [
+            [
+                "a3e65b74cc592b21"
+            ]
+        ]
+    },
+    {
+        "id": "a3e65b74cc592b21",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 17",
+        "func": "var idnodo = msg.payload.idnodo;\nmsg.topic = \"select * from datos where idnodo =\" + idnodo;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1210,
+        "y": 720,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "2b5a87cdde8d7d23",
+        "type": "http in",
+        "z": "0d16ce2af94d3313",
+        "name": "",
+        "url": "/userName",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 880,
+        "y": 820,
+        "wires": [
+            [
+                "2ea4d560f62f6495"
+            ]
+        ]
+    },
+    {
+        "id": "2ea4d560f62f6495",
+        "type": "function",
+        "z": "0d16ce2af94d3313",
+        "name": "function 18",
+        "func": "var name = msg.payload.name;\nmsg.topic = `select * from usuarios where nombre=\"${name}\"`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 820,
+        "wires": [
+            [
+                "bd26c742e73c59d2"
+            ]
+        ]
+    },
+    {
+        "id": "2133642c3ad18612",
+        "type": "mqtt-broker",
+        "name": "broker local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f2dc22e9c028f5d4",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "localhost",
+        "port": "3306",
+        "db": "iaiot",
+        "tz": "",
+        "charset": "UTF8"
+    }
+]

@@ -1,0 +1,8 @@
+version: '3'
+services:
+  webserver:
+    image: php:7.4-apache  # Utilizamos una imagen que incluye PHP y Apache
+    ports:
+      - "80:80"  # Mapeamos el puerto 80 del contenedor al puerto 80 del host
+    volumes:
+      - C:\Users\User\Desktop\page-iotia\php-files:/var/www/html   # C:\path-to-your-directory\php-files:/var/www/html  
